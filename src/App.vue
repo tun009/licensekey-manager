@@ -1,21 +1,9 @@
 <script setup lang="ts">
-import Header from '@/components/layout/Header.vue'
-import Sidebar from '@/components/layout/Sidebar.vue'
-import { RouterView } from 'vue-router'
+import MainLayout from '@/layouts/MainLayout.vue'
 </script>
 
 <template>
-  <div class="min-h-screen bg-background text-foreground">
-    <Header />
-    <div class="flex">
-      <Sidebar />
-      <main class="flex-1 p-6">
-        <div class="container mx-auto max-w-7xl">
-          <RouterView />
-        </div>
-      </main>
-    </div>
-  </div>
+  <MainLayout />
 </template>
 
 <style scoped>

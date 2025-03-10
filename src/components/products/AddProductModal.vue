@@ -1,5 +1,5 @@
 <template>
-  <Dialog :open="modelValue" @update:open="$emit('update:modelValue', $event)">
+  <Dialog :open="open" @update:open="onOpenChange">
     <DialogContent class="sm:max-w-[700px]">
       <DialogHeader class="space-y-1.5 text-left">
         <DialogTitle>Add New Product</DialogTitle>
@@ -236,7 +236,7 @@
           Cancel
         </Button>
         <Button 
-          @click="createProduct" 
+          @click="handleSubmit" 
           class="gap-2"
         >
           <CheckCircle class="h-4 w-4" />
@@ -248,7 +248,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, defineEmits, defineProps } from 'vue'
+import { ref, defineEmits, defineProps, withDefaults } from 'vue'
 import { 
   Upload, 
   FileCode,
@@ -279,11 +279,16 @@ import {
   TabsTrigger,
 } from '@/components/ui/tabs'
 
-defineProps({
-  modelValue: {
-    type: Boolean,
-    default: false
-  }
+interface Props {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  onSubmit: (productData: any) => void;
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  open: false,
+  onOpenChange: () => {},
+  onSubmit: () => {},
 })
 
 const emit = defineEmits(['update:modelValue', 'product-created'])
@@ -334,22 +339,35 @@ const clearThumbnail = () => {
   }
 }
 
-const createProduct = () => {
-  // Here you would typically send the data to your API
-  console.log('Product data to submit:', productForm.value)
+const handleSubmit = () => {
+  // Format the data
+  const formattedData = {
+    name: productForm.value.name,
+    slug: productForm.value.slug,
+    version: productForm.value.version,
+    isActive: productForm.value.status === 'active',
+    updateUrl: productForm.value.update_url,
+    downloadUrl: productForm.value.download_url,
+    encryptionKey: productForm.value.encrypt_public_key,
+    postTitle: productForm.value.post.title,
+    keywords: productForm.value.post.keywords,
+    description: productForm.value.post.description,
+    thumbnailUrl: productForm.value.thumbnail ? URL.createObjectURL(productForm.value.thumbnail) : null,
+    created: new Date().toLocaleDateString()
+  }
   
-  // Emit an event with the product data
-  emit('product-created', productForm.value)
+  // Submit data
+  props.onSubmit(formattedData)
   
-  // Reset the form
+  // Close modal
+  props.onOpenChange(false)
+  
+  // Reset form
   resetForm()
-  
-  // Close the modal
-  closeModal()
 }
 
 const closeModal = () => {
-  emit('update:modelValue', false)
+  props.onOpenChange(false)
 }
 
 const resetForm = () => {

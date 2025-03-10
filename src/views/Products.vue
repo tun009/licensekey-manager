@@ -7,7 +7,7 @@
         class="gap-2"
       >
         <Plus class="h-4 w-4" />
-        New Product
+        Add Product
       </Button>
     </div>
     
@@ -25,8 +25,16 @@
     
     <!-- Add Product Modal -->
     <AddProductModal 
-      v-model="showAddProductModal"
-      @product-created="handleProductCreated"
+      :open="showAddProductModal" 
+      :onOpenChange="(open) => showAddProductModal = open"
+      :onSubmit="handleAddProduct"
+    />
+
+    <!-- Package Form (for adding a new package) -->
+    <PackageForm 
+      :open="showAddPackageModal" 
+      :onOpenChange="(open) => showAddPackageModal = open"
+      :onSubmit="handleAddPackage"
     />
   </div>
 </template>
@@ -38,6 +46,7 @@ import {
   Search
 } from 'lucide-vue-next'
 import AddProductModal from '@/components/products/AddProductModal.vue'
+import PackageForm, { PackageItem } from '@/components/products/packages/PackageForm.vue'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import DataTable from '@/components/products/data-table.vue'
@@ -45,6 +54,8 @@ import { columns, type Product } from '@/components/products/columns'
 
 const searchQuery = ref('')
 const showAddProductModal = ref(false)
+const showAddPackageModal = ref(false)
+const selectedProductId = ref<number | null>(null)
 
 const products = ref<Product[]>([
   {
@@ -119,7 +130,7 @@ const filteredProducts = computed(() => {
   )
 })
 
-const handleProductCreated = (productData: any) => {
+const handleAddProduct = (productData: any) => {
   // Tạo ID mới cho sản phẩm
   const newId = Math.max(...products.value.map(p => p.id)) + 1
   
@@ -137,5 +148,22 @@ const handleProductCreated = (productData: any) => {
   
   // Hiển thị thông báo thành công (trong ứng dụng thực tế)
   console.log('Product created successfully:', productData)
+}
+
+// Handle adding a new package
+const handleAddPackage = (packageData: PackageItem) => {
+  if (selectedProductId.value) {
+    // In a real app, this would be an API call to add the package to the specific product
+    console.log(`Adding package to product ID: ${selectedProductId.value}`, packageData)
+  }
+  
+  // Reset selected product
+  selectedProductId.value = null
+}
+
+// Function to trigger add package modal for a specific product
+const openAddPackageModal = (productId: number) => {
+  selectedProductId.value = productId
+  showAddPackageModal.value = true
 }
 </script> 

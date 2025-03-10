@@ -121,7 +121,7 @@ export const columns: ColumnDef<Product>[] = [
               h(DropdownMenuItem, {}, {
                 default: () => [
                   h(PackagePlus, { class: 'h-4 w-4 mr-2' }),
-                  h('span', {}, 'Packages')
+                  h('span', {}, 'Add package')
                 ]
               }),
               h(DropdownMenuSeparator),
