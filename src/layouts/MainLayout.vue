@@ -3,78 +3,64 @@
     <!-- Sidebar -->
     <aside
       :class="[
-        'fixed top-0 left-0 z-40 h-screen transition-all duration-300 bg-[#0f172a] text-white',
+        'fixed top-0 left-0 z-40 h-screen transition-all duration-300',
+        'border-r',
         isSidebarOpen ? 'w-64' : 'w-20'
       ]"
     >
-      <div class="h-16 flex items-center px-4 border-b border-gray-800">
-        <h1 class="text-xl font-bold truncate text-white" :class="{ 'opacity-0': !isSidebarOpen }">
+      <div class="h-16 flex items-center px-4 border-b">
+        <h1 class="text-xl font-bold truncate text-gray-700" :class="{ 'opacity-0': !isSidebarOpen }">
           License Manager
         </h1>
       </div>
       <nav class="p-4 space-y-2">
         <router-link
           to="/dashboard"
-          class="flex items-center gap-2 px-3 py-2 rounded-md hover:bg-gray-800 text-gray-300"
-          :class="[
-            { 'justify-center': !isSidebarOpen },
-            $route.path.startsWith('/dashboard') ? 'bg-gray-800 text-white' : ''
-          ]"
+          class="flex items-center gap-2 px-3 py-2 rounded-md hover:bg-gray-100 text-gray-700"
+          :class="{ 'justify-center': !isSidebarOpen }"
         >
           <LayoutDashboard class="h-5 w-5" />
-          <span :class="{ 'hidden': !isSidebarOpen }">Dashboard</span>
+          <span :class="{ 'hidden': !isSidebarOpen }">Bảng điều khiển</span>
+        </router-link>
+        <router-link
+          to="/licenses"
+          class="flex items-center gap-2 px-3 py-2 rounded-md hover:bg-gray-100 text-gray-700"
+          :class="{ 'justify-center': !isSidebarOpen }"
+        >
+          <Key class="h-5 w-5" />
+          <span :class="{ 'hidden': !isSidebarOpen }">Giấy phép</span>
         </router-link>
         <router-link
           to="/products"
-          class="flex items-center gap-2 px-3 py-2 rounded-md hover:bg-gray-800 text-gray-300"
+          class="flex items-center gap-2 px-3 py-2 rounded-md hover:bg-gray-100 text-gray-700"
           :class="[
             { 'justify-center': !isSidebarOpen },
-            $route.path.startsWith('/products') ? 'bg-gray-800 text-white' : ''
+            $route.path.startsWith('/products') ? 'bg-gray-200 font-medium' : ''
           ]"
         >
           <Package class="h-5 w-5" />
           <span :class="{ 'hidden': !isSidebarOpen }">Sản phẩm</span>
         </router-link>
         <router-link
-          to="/licenses"
-          class="flex items-center gap-2 px-3 py-2 rounded-md hover:bg-gray-800 text-gray-300"
-          :class="[
-            { 'justify-center': !isSidebarOpen },
-            $route.path.startsWith('/licenses') ? 'bg-gray-800 text-white' : ''
-          ]"
-        >
-          <Key class="h-5 w-5" />
-          <span :class="{ 'hidden': !isSidebarOpen }">Giấy phép</span>
-        </router-link>
-        <router-link
-          to="/orders"
-          class="flex items-center gap-2 px-3 py-2 rounded-md hover:bg-gray-800 text-gray-300"
-          :class="[
-            { 'justify-center': !isSidebarOpen },
-            $route.path.startsWith('/orders') ? 'bg-gray-800 text-white' : ''
-          ]"
-        >
-          <ShoppingCart class="h-5 w-5" />
-          <span :class="{ 'hidden': !isSidebarOpen }">Đơn hàng</span>
-        </router-link>
-        <router-link
           to="/users"
-          class="flex items-center gap-2 px-3 py-2 rounded-md hover:bg-gray-800 text-gray-300"
-          :class="[
-            { 'justify-center': !isSidebarOpen },
-            $route.path.startsWith('/users') ? 'bg-gray-800 text-white' : ''
-          ]"
+          class="flex items-center gap-2 px-3 py-2 rounded-md hover:bg-gray-100 text-gray-700"
+          :class="{ 'justify-center': !isSidebarOpen }"
         >
           <Users class="h-5 w-5" />
           <span :class="{ 'hidden': !isSidebarOpen }">Người dùng</span>
         </router-link>
         <router-link
+          to="/orders"
+          class="flex items-center gap-2 px-3 py-2 rounded-md hover:bg-gray-100 text-gray-700"
+          :class="{ 'justify-center': !isSidebarOpen }"
+        >
+          <ShoppingCart class="h-5 w-5" />
+          <span :class="{ 'hidden': !isSidebarOpen }">Đơn hàng</span>
+        </router-link>
+        <router-link
           to="/settings"
-          class="flex items-center gap-2 px-3 py-2 rounded-md hover:bg-gray-800 text-gray-300"
-          :class="[
-            { 'justify-center': !isSidebarOpen },
-            $route.path.startsWith('/settings') ? 'bg-gray-800 text-white' : ''
-          ]"
+          class="flex items-center gap-2 px-3 py-2 rounded-md hover:bg-gray-100 text-gray-700"
+          :class="{ 'justify-center': !isSidebarOpen }"
         >
           <Settings class="h-5 w-5" />
           <span :class="{ 'hidden': !isSidebarOpen }">Cài đặt</span>
@@ -89,19 +75,13 @@
           variant="ghost" 
           size="icon" 
           @click="toggleSidebar"
-          class="rounded-full border border-gray-700 bg-gray-800 shadow-sm hover:bg-gray-700 text-white"
+          class="rounded-full border border-gray-200 bg-white shadow-sm hover:bg-gray-100"
         >
           <ChevronLeft 
-            class="h-5 w-5 transition-transform" 
+            class="h-5 w-5 text-gray-700 transition-transform" 
             :class="{ 'rotate-180': !isSidebarOpen }" 
           />
         </Button>
-      </div>
-      
-      <!-- Version number at bottom -->
-      <div class="absolute bottom-16 left-0 w-full flex justify-center text-xs text-gray-500">
-        <span :class="{ 'hidden': !isSidebarOpen }">v1.0.0</span>
-        <span :class="{ 'hidden': isSidebarOpen }">v1</span>
       </div>
     </aside>
 
@@ -118,7 +98,7 @@
       class="transition-all duration-300 min-h-screen pt-16"
       :class="[isSidebarOpen ? 'ml-64' : 'ml-20']"
     >
-      <div class="container py-6 mx-auto max-w-7xl">
+      <div class="container py-6 mx-auto max-w-9xl">
         <router-view></router-view>
       </div>
     </main>
@@ -247,6 +227,6 @@ watch(isDarkMode, (newValue) => {
 
 <style scoped>
 .router-link-active {
-  @apply bg-gray-800 text-white font-medium;
+  @apply bg-gray-200 dark:bg-gray-700 font-medium;
 }
 </style> 

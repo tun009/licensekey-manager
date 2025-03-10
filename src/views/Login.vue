@@ -19,14 +19,20 @@
           <div class="space-y-4">
             <div class="space-y-2">
               <Label for="email">Email</Label>
-              <Input 
-                id="email" 
-                v-model="loginForm.email" 
-                type="email" 
-                placeholder="your@email.com" 
-                required 
-                autocomplete="email"
-              />
+              <div class="relative">
+                <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                  <Mail class="h-5 w-5 text-gray-400" />
+                </div>
+                <Input 
+                  id="email" 
+                  v-model="loginForm.email" 
+                  type="email" 
+                  class="pl-10"
+                  placeholder="your@email.com" 
+                  required 
+                  autocomplete="email"
+                />
+              </div>
             </div>
             <div class="space-y-2">
               <div class="flex items-center justify-between">
@@ -39,18 +45,31 @@
                   Quên mật khẩu?
                 </Button>
               </div>
-              <Input 
-                id="password" 
-                v-model="loginForm.password" 
-                type="password" 
-                placeholder="••••••••" 
-                required 
-                autocomplete="current-password"
-              />
+              <div class="relative">
+                <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                  <Lock class="h-5 w-5 text-gray-400" />
+                </div>
+                <Input 
+                  id="password" 
+                  v-model="loginForm.password" 
+                  type="password" 
+                  class="pl-10"
+                  placeholder="••••••••" 
+                  required 
+                  autocomplete="current-password"
+                />
+              </div>
             </div>
             <div class="flex items-center space-x-2">
-              <Checkbox id="remember" v-model:checked="loginForm.remember" />
-              <Label for="remember" class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+              <Checkbox 
+                id="remember" 
+                v-model="loginForm.remember"
+                class="rounded border-gray-300"
+              />
+              <Label 
+                for="remember" 
+                class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+              >
                 Ghi nhớ đăng nhập
               </Label>
             </div>
@@ -82,47 +101,71 @@
           <div class="space-y-4">
             <div class="space-y-2">
               <Label for="register-name">Họ tên</Label>
-              <Input 
-                id="register-name" 
-                v-model="registerForm.name" 
-                type="text" 
-                placeholder="Nguyễn Văn A" 
-                required 
-                autocomplete="name"
-              />
+              <div class="relative">
+                <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                  <User class="h-5 w-5 text-gray-400" />
+                </div>
+                <Input 
+                  id="register-name" 
+                  v-model="registerForm.name" 
+                  type="text" 
+                  class="pl-10"
+                  placeholder="Nguyễn Văn A" 
+                  required 
+                  autocomplete="name"
+                />
+              </div>
             </div>
             <div class="space-y-2">
               <Label for="register-email">Email</Label>
-              <Input 
-                id="register-email" 
-                v-model="registerForm.email" 
-                type="email" 
-                placeholder="your@email.com" 
-                required 
-                autocomplete="email"
-              />
+              <div class="relative">
+                <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                  <Mail class="h-5 w-5 text-gray-400" />
+                </div>
+                <Input 
+                  id="register-email" 
+                  v-model="registerForm.email" 
+                  type="email" 
+                  class="pl-10"
+                  placeholder="your@email.com" 
+                  required 
+                  autocomplete="email"
+                />
+              </div>
             </div>
             <div class="space-y-2">
               <Label for="register-password">Mật khẩu</Label>
-              <Input 
-                id="register-password" 
-                v-model="registerForm.password" 
-                type="password" 
-                placeholder="••••••••" 
-                required 
-                autocomplete="new-password"
-              />
+              <div class="relative">
+                <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                  <Lock class="h-5 w-5 text-gray-400" />
+                </div>
+                <Input 
+                  id="register-password" 
+                  v-model="registerForm.password" 
+                  type="password" 
+                  class="pl-10"
+                  placeholder="••••••••" 
+                  required 
+                  autocomplete="new-password"
+                />
+              </div>
             </div>
             <div class="space-y-2">
               <Label for="register-confirm-password">Xác nhận mật khẩu</Label>
-              <Input 
-                id="register-confirm-password" 
-                v-model="registerForm.confirmPassword" 
-                type="password" 
-                placeholder="••••••••" 
-                required 
-                autocomplete="new-password"
-              />
+              <div class="relative">
+                <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                  <Lock class="h-5 w-5 text-gray-400" />
+                </div>
+                <Input 
+                  id="register-confirm-password" 
+                  v-model="registerForm.confirmPassword" 
+                  type="password" 
+                  class="pl-10"
+                  placeholder="••••••••" 
+                  required 
+                  autocomplete="new-password"
+                />
+              </div>
               <p v-if="passwordError" class="text-sm text-red-500">{{ passwordError }}</p>
             </div>
           </div>
@@ -143,13 +186,19 @@
         <form @submit.prevent="handleForgotPassword" class="space-y-4">
           <div class="space-y-2">
             <Label for="reset-email">Email</Label>
-            <Input 
-              id="reset-email" 
-              v-model="forgotPasswordEmail" 
-              type="email" 
-              placeholder="your@email.com" 
-              required 
-            />
+            <div class="relative">
+              <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                <Mail class="h-5 w-5 text-gray-400" />
+              </div>
+              <Input 
+                id="reset-email" 
+                v-model="forgotPasswordEmail" 
+                type="email" 
+                class="pl-10"
+                placeholder="your@email.com" 
+                required 
+              />
+            </div>
           </div>
           <DialogFooter>
             <Button type="button" variant="outline" @click="showForgotPassword = false">
@@ -166,6 +215,7 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
+import { useAuthStore } from '@/stores/auth'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -179,8 +229,10 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog'
+import { Mail, Lock, User } from 'lucide-vue-next'
 
 const router = useRouter()
+const authStore = useAuthStore()
 const isLoginMode = ref(true)
 const showForgotPassword = ref(false)
 const forgotPasswordEmail = ref('')
@@ -217,11 +269,10 @@ const toggleMode = () => {
 // Handle login
 const handleLogin = async () => {
   try {
-    // In a real app, this would be an API call
-    console.log('Logging in with:', loginForm.value)
-    
-    // Simulate successful login
-    router.push('/dashboard')
+    const success = await authStore.login(loginForm.value.email, loginForm.value.password)
+    if (success) {
+      router.push('/dashboard')
+    }
   } catch (error) {
     console.error('Login failed:', error)
   }
@@ -229,30 +280,21 @@ const handleLogin = async () => {
 
 // Handle admin login
 const handleAdminLogin = async () => {
-  try {
-    // In a real app, this would redirect to admin login page
-    console.log('Redirecting to admin login')
-    
-    // Simulate admin login
-    router.push('/admin/login')
-  } catch (error) {
-    console.error('Admin login failed:', error)
-  }
+  router.push('/admin/login')
 }
 
 // Handle register
 const handleRegister = async () => {
   try {
-    // Check if passwords match
     if (registerForm.value.password !== registerForm.value.confirmPassword) {
-      return // Don't proceed if passwords don't match
+      return
     }
     
     // In a real app, this would be an API call
     console.log('Registering with:', registerForm.value)
     
-    // Simulate successful registration
-    isLoginMode.value = true // Switch to login mode
+    // Switch to login mode after successful registration
+    isLoginMode.value = true
   } catch (error) {
     console.error('Registration failed:', error)
   }
@@ -263,11 +305,7 @@ const handleForgotPassword = async () => {
   try {
     // In a real app, this would be an API call
     console.log('Sending password reset link to:', forgotPasswordEmail.value)
-    
-    // Close the dialog
     showForgotPassword.value = false
-    
-    // Reset the email field
     forgotPasswordEmail.value = ''
   } catch (error) {
     console.error('Password reset failed:', error)

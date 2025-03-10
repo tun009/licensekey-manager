@@ -1,9 +1,23 @@
 <script setup lang="ts">
+import { computed } from 'vue'
+import { useRoute } from 'vue-router'
 import MainLayout from '@/layouts/MainLayout.vue'
+import BlankLayout from '@/layouts/BlankLayout.vue'
+
+const route = useRoute()
+
+const layout = computed(() => {
+  const layoutName = route.meta.layout as string || 'main'
+  return layoutName === 'blank' ? BlankLayout : MainLayout
+})
 </script>
 
 <template>
-  <MainLayout />
+  <component :is="layout">
+    <router-view v-slot="{ Component }">
+      <component :is="Component" />
+    </router-view>
+  </component>
 </template>
 
 <style scoped>

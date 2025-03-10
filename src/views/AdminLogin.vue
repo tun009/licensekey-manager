@@ -15,31 +15,48 @@
           <div class="space-y-4">
             <div class="space-y-2">
               <Label for="email">Email</Label>
-              <Input 
-                id="email" 
-                v-model="loginForm.email" 
-                type="email" 
-                placeholder="admin@example.com" 
-                required 
-                autocomplete="email"
-              />
+              <div class="relative">
+                <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                  <Mail class="h-5 w-5 text-gray-400" />
+                </div>
+                <Input 
+                  id="email" 
+                  v-model="loginForm.email" 
+                  type="email" 
+                  class="pl-10"
+                  placeholder="admin@example.com" 
+                  required 
+                  autocomplete="email"
+                />
+              </div>
             </div>
             <div class="space-y-2">
-              <div class="flex items-center justify-between">
-                <Label for="password">Mật khẩu</Label>
+              <Label for="password">Mật khẩu</Label>
+              <div class="relative">
+                <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                  <Lock class="h-5 w-5 text-gray-400" />
+                </div>
+                <Input 
+                  id="password" 
+                  v-model="loginForm.password" 
+                  type="password" 
+                  class="pl-10"
+                  placeholder="••••••••" 
+                  required 
+                  autocomplete="current-password"
+                />
               </div>
-              <Input 
-                id="password" 
-                v-model="loginForm.password" 
-                type="password" 
-                placeholder="••••••••" 
-                required 
-                autocomplete="current-password"
-              />
             </div>
             <div class="flex items-center space-x-2">
-              <Checkbox id="remember" v-model:checked="loginForm.remember" />
-              <Label for="remember" class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+              <Checkbox 
+                id="remember" 
+                v-model="loginForm.remember"
+                class="rounded border-gray-300"
+              />
+              <Label 
+                for="remember" 
+                class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+              >
                 Ghi nhớ đăng nhập
               </Label>
             </div>
@@ -71,13 +88,16 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
+import { useAuthStore } from '@/stores/auth'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Card } from '@/components/ui/card'
 import { Checkbox } from '@/components/ui/checkbox'
+import { Mail, Lock } from 'lucide-vue-next'
 
 const router = useRouter()
+const authStore = useAuthStore()
 
 // Login form
 const loginForm = ref({
@@ -89,11 +109,10 @@ const loginForm = ref({
 // Handle admin login
 const handleAdminLogin = async () => {
   try {
-    // In a real app, this would be an API call to verify admin credentials
-    console.log('Admin logging in with:', loginForm.value)
-    
-    // Simulate successful login
-    router.push('/admin/dashboard')
+    const success = await authStore.login(loginForm.value.email, loginForm.value.password, true)
+    if (success) {
+      router.push('/admin/dashboard')
+    }
   } catch (error) {
     console.error('Admin login failed:', error)
   }
