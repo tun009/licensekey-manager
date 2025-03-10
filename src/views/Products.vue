@@ -17,11 +17,15 @@
         <Input
           placeholder="Search products..."
           v-model="searchQuery"
-          class="pl-8"
+          class="pl-8 bg-white dark:bg-gray-800 bg-white dark:bg-gray-800"
         />
       </div>
     </div>
-    <DataTable :columns="columns" :data="filteredProducts" />
+    <DataTable 
+      :columns="columns" 
+      :data="filteredProducts" 
+      emptyMessage="No products found."
+    />
     
     <!-- Add Product Modal -->
     <AddProductModal 
@@ -49,7 +53,7 @@ import AddProductModal from '@/components/products/AddProductModal.vue'
 import PackageForm, { PackageItem } from '@/components/products/packages/PackageForm.vue'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import DataTable from '@/components/products/data-table.vue'
+import DataTable from '@/components/ui/data-table/data-table.vue'
 import { columns, type Product } from '@/components/products/columns'
 
 const searchQuery = ref('')

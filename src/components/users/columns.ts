@@ -1,62 +1,54 @@
 import { h } from 'vue'
-import { Badge } from '@/components/ui/badge'
 import DataTableColumnHeader from '@/components/ui/data-table/data-table-column-header.vue'
 import { 
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger 
 } from '@/components/ui/dropdown-menu'
 import { Button } from '@/components/ui/button'
 import { 
   MoreVertical, 
-  Eye, 
   Edit, 
-  Key, 
-  PackagePlus, 
   Trash,
-  Package 
+  Key,
+  User
 } from 'lucide-vue-next'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import type { ColumnDef } from '@tanstack/vue-table'
 
-export interface Product {
+export interface UserData {
   id: number;
   name: string;
-  slug: string;
-  version: string;
-  packages: number;
+  email: string;
   licenses: number;
-  isActive: boolean;
+  orders: number;
   created: string;
 }
 
-export const columns: ColumnDef<Product>[] = [
+export const columns: ColumnDef<UserData>[] = [
   {
     accessorKey: 'name',
-    header: ({ column }) => h(DataTableColumnHeader, { column, title: 'Name' }),
+    header: ({ column }) => h(DataTableColumnHeader, { column, title: 'User' }),
     cell: ({ row }) => {
-      return h('div', { class: 'flex items-center gap-2' }, [
-        h(Package, { class: 'h-4 w-4 text-primary' }),
-        h('div', [
-          h('div', { class: 'font-medium' }, row.getValue('name')),
-          h('div', { class: 'text-xs text-muted-foreground' }, `product-${row.original.id}`)
-        ])
+      const user = row.original
+      return h('div', { class: 'flex items-center gap-3 font-medium' }, [
+        h(Avatar, { class: 'h-8 w-8' }, {
+          default: () => [
+            h(AvatarImage, { src: `https://avatar.vercel.sh/${user.email}` }),
+            h(AvatarFallback, {}, () => user.name.substring(0, 2).toUpperCase())
+          ]
+        }),
+        h('span', {}, user.name)
       ])
     },
     enableSorting: true,
     enableHiding: false,
   },
   {
-    accessorKey: 'version',
-    header: ({ column }) => h(DataTableColumnHeader, { column, title: 'Version' }),
-    enableSorting: true,
-    enableHiding: true,
-  },
-  {
-    accessorKey: 'packages',
-    header: ({ column }) => h(DataTableColumnHeader, { column, title: 'Packages' }),
+    accessorKey: 'email',
+    header: ({ column }) => h(DataTableColumnHeader, { column, title: 'Email' }),
     enableSorting: true,
     enableHiding: true,
   },
@@ -67,14 +59,8 @@ export const columns: ColumnDef<Product>[] = [
     enableHiding: true,
   },
   {
-    accessorKey: 'isActive',
-    header: ({ column }) => h(DataTableColumnHeader, { column, title: 'Status' }),
-    cell: ({ row }) => {
-      const isActive = row.getValue('isActive')
-      return h(Badge, { 
-        variant: isActive ? 'default' : 'secondary' 
-      }, () => isActive ? 'Active' : 'Inactive')
-    },
+    accessorKey: 'orders',
+    header: ({ column }) => h(DataTableColumnHeader, { column, title: 'Orders' }),
     enableSorting: true,
     enableHiding: true,
   },
@@ -88,7 +74,7 @@ export const columns: ColumnDef<Product>[] = [
     id: 'actions',
     header: ({ column }) => h(DataTableColumnHeader, { column, title: 'Actions' }),
     cell: ({ row }) => {
-      const product = row.original
+      const user = row.original
       
       return h(DropdownMenu, {}, {
         default: () => [
@@ -100,35 +86,22 @@ export const columns: ColumnDef<Product>[] = [
           h(DropdownMenuContent, { align: 'end' }, {
             default: () => [
               h(DropdownMenuLabel, {}, () => 'Actions'),
-              h(DropdownMenuItem, { onClick: () => window.location.href = `/products/${product.id}` }, {
-                default: () => [
-                  h(Eye, { class: 'h-4 w-4 mr-2' }),
-                  h('span', {}, 'View Details')
-                ]
-              }),
               h(DropdownMenuItem, {}, {
                 default: () => [
                   h(Edit, { class: 'h-4 w-4 mr-2' }),
-                  h('span', {}, 'Edit')
+                  h('span', {}, 'Edit Details')
                 ]
               }),
               h(DropdownMenuItem, {}, {
                 default: () => [
                   h(Key, { class: 'h-4 w-4 mr-2' }),
-                  h('span', {}, 'Licenses')
+                  h('span', {}, 'View Licenses')
                 ]
               }),
-              h(DropdownMenuItem, {}, {
-                default: () => [
-                  h(PackagePlus, { class: 'h-4 w-4 mr-2' }),
-                  h('span', {}, 'Add package')
-                ]
-              }),
-              h(DropdownMenuSeparator),
               h(DropdownMenuItem, { class: 'text-destructive' }, {
                 default: () => [
                   h(Trash, { class: 'h-4 w-4 mr-2' }),
-                  h('span', {}, 'Delete')
+                  h('span', {}, 'Delete User')
                 ]
               })
             ]

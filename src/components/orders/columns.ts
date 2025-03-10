@@ -6,7 +6,6 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger 
 } from '@/components/ui/dropdown-menu'
 import { Button } from '@/components/ui/button'
@@ -14,66 +13,73 @@ import {
   MoreVertical, 
   Eye, 
   Edit, 
-  Key, 
-  PackagePlus, 
   Trash,
-  Package 
+  ShoppingCart
 } from 'lucide-vue-next'
 import type { ColumnDef } from '@tanstack/vue-table'
 
-export interface Product {
+export interface Order {
   id: number;
-  name: string;
-  slug: string;
-  version: string;
-  packages: number;
-  licenses: number;
-  isActive: boolean;
+  orderCode: string;
+  user: string;
+  productPackage: string;
+  price: string;
+  status: 'pending' | 'completed' | 'failed';
   created: string;
 }
 
-export const columns: ColumnDef<Product>[] = [
+// Helper for status badge color
+const getStatusColor = (status: string) => {
+  switch (status) {
+    case 'completed': return 'default';
+    case 'pending': return 'secondary';
+    case 'failed': return 'destructive';
+    default: return 'secondary';
+  }
+};
+
+export const columns: ColumnDef<Order>[] = [
   {
-    accessorKey: 'name',
-    header: ({ column }) => h(DataTableColumnHeader, { column, title: 'Name' }),
+    accessorKey: 'orderCode',
+    header: ({ column }) => h(DataTableColumnHeader, { column, title: 'Order Code' }),
     cell: ({ row }) => {
-      return h('div', { class: 'flex items-center gap-2' }, [
-        h(Package, { class: 'h-4 w-4 text-primary' }),
-        h('div', [
-          h('div', { class: 'font-medium' }, row.getValue('name')),
-          h('div', { class: 'text-xs text-muted-foreground' }, `product-${row.original.id}`)
-        ])
+      return h('div', { class: 'flex items-center gap-2 font-medium' }, [
+        h(ShoppingCart, { class: 'h-4 w-4 text-primary' }),
+        h('span', {}, row.getValue('orderCode'))
       ])
     },
     enableSorting: true,
     enableHiding: false,
   },
   {
-    accessorKey: 'version',
-    header: ({ column }) => h(DataTableColumnHeader, { column, title: 'Version' }),
+    accessorKey: 'user',
+    header: ({ column }) => h(DataTableColumnHeader, { column, title: 'User' }),
     enableSorting: true,
     enableHiding: true,
   },
   {
-    accessorKey: 'packages',
-    header: ({ column }) => h(DataTableColumnHeader, { column, title: 'Packages' }),
+    accessorKey: 'productPackage',
+    header: ({ column }) => h(DataTableColumnHeader, { column, title: 'Package' }),
     enableSorting: true,
     enableHiding: true,
   },
   {
-    accessorKey: 'licenses',
-    header: ({ column }) => h(DataTableColumnHeader, { column, title: 'Licenses' }),
+    accessorKey: 'price',
+    header: ({ column }) => h(DataTableColumnHeader, { column, title: 'Price' }),
+    cell: ({ row }) => {
+      return h('span', {}, `$${row.getValue('price')}`)
+    },
     enableSorting: true,
     enableHiding: true,
   },
   {
-    accessorKey: 'isActive',
+    accessorKey: 'status',
     header: ({ column }) => h(DataTableColumnHeader, { column, title: 'Status' }),
     cell: ({ row }) => {
-      const isActive = row.getValue('isActive')
+      const status = row.getValue('status') as string
       return h(Badge, { 
-        variant: isActive ? 'default' : 'secondary' 
-      }, () => isActive ? 'Active' : 'Inactive')
+        variant: getStatusColor(status) as any
+      }, () => status.charAt(0).toUpperCase() + status.slice(1))
     },
     enableSorting: true,
     enableHiding: true,
@@ -88,7 +94,7 @@ export const columns: ColumnDef<Product>[] = [
     id: 'actions',
     header: ({ column }) => h(DataTableColumnHeader, { column, title: 'Actions' }),
     cell: ({ row }) => {
-      const product = row.original
+      const order = row.original
       
       return h(DropdownMenu, {}, {
         default: () => [
@@ -100,7 +106,7 @@ export const columns: ColumnDef<Product>[] = [
           h(DropdownMenuContent, { align: 'end' }, {
             default: () => [
               h(DropdownMenuLabel, {}, () => 'Actions'),
-              h(DropdownMenuItem, { onClick: () => window.location.href = `/products/${product.id}` }, {
+              h(DropdownMenuItem, {}, {
                 default: () => [
                   h(Eye, { class: 'h-4 w-4 mr-2' }),
                   h('span', {}, 'View Details')
@@ -109,26 +115,13 @@ export const columns: ColumnDef<Product>[] = [
               h(DropdownMenuItem, {}, {
                 default: () => [
                   h(Edit, { class: 'h-4 w-4 mr-2' }),
-                  h('span', {}, 'Edit')
+                  h('span', {}, 'Update Status')
                 ]
               }),
-              h(DropdownMenuItem, {}, {
-                default: () => [
-                  h(Key, { class: 'h-4 w-4 mr-2' }),
-                  h('span', {}, 'Licenses')
-                ]
-              }),
-              h(DropdownMenuItem, {}, {
-                default: () => [
-                  h(PackagePlus, { class: 'h-4 w-4 mr-2' }),
-                  h('span', {}, 'Add package')
-                ]
-              }),
-              h(DropdownMenuSeparator),
               h(DropdownMenuItem, { class: 'text-destructive' }, {
                 default: () => [
                   h(Trash, { class: 'h-4 w-4 mr-2' }),
-                  h('span', {}, 'Delete')
+                  h('span', {}, 'Delete Order')
                 ]
               })
             ]
