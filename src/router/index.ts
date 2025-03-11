@@ -9,11 +9,31 @@ const router = createRouter({
       redirect: '/dashboard'
     },
     {
+      path: '/landing',
+      name: 'LandingPage',
+      component: () => import('@/views/LandingPage.vue'),
+      meta: {
+        title: 'Landing Page',
+        requiresAuth: false,
+        layout: 'blank'
+      }
+    },
+    {
       path: '/login',
       name: 'Login',
       component: () => import('@/views/Login.vue'),
       meta: {
         title: 'Login',
+        requiresAuth: false,
+        layout: 'blank'
+      }
+    },
+    {
+      path: '/register',
+      name: 'Register',
+      component: () => import('@/views/Register.vue'),
+      meta: {
+        title: 'Register',
         requiresAuth: false,
         layout: 'blank'
       }
@@ -35,6 +55,16 @@ const router = createRouter({
       meta: {
         title: 'Dashboard',
         requiresAuth: true
+      }
+    },
+    {
+      path: '/admin/dashboard',
+      name: 'AdminDashboard',
+      component: () => import('@/views/Dashboard.vue'),
+      meta: {
+        title: 'Admin Dashboard',
+        requiresAuth: true,
+        requiresAdmin: true
       }
     },
     {
@@ -90,22 +120,33 @@ const router = createRouter({
   ]
 })
 
-// Create auth store outside of navigation guard
-let authStore: ReturnType<typeof useAuthStore>
-
+// Navigation guard
 router.beforeEach(async (to, from, next) => {
-  // Initialize auth store if not already initialized
-  if (!authStore) {
-    authStore = useAuthStore()
+  const authStore = useAuthStore()
+  
+  // Initialize auth store if not already done
+  if (!authStore.isAuthenticated) {
     await authStore.initializeFromStorage()
   }
 
   const requiresAuth = to.matched.some(record => record.meta.requiresAuth)
+  const requiresAdmin = to.matched.some(record => record.meta.requiresAdmin)
 
   if (requiresAuth && !authStore.isAuthenticated) {
-    next('/login')
-  } else if ((to.path === '/login' || to.path === '/admin/login') && authStore.isAuthenticated) {
+    // Redirect to login with return path
+    next({
+      path: '/login',
+      query: { redirect: to.fullPath }
+    })
+  } else if (requiresAdmin && !authStore.user?.isAdmin) {
+    // Redirect non-admin users
     next('/dashboard')
+  } else if (to.path === '/login' && authStore.isAuthenticated) {
+    // Redirect logged in users trying to access login page
+    next('/dashboard')
+  } else if (to.path === '/admin/login' && authStore.isAuthenticated) {
+    // Redirect logged in admins trying to access admin login page
+    next('/admin/dashboard')
   } else {
     next()
   }

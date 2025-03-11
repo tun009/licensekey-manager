@@ -1,83 +1,89 @@
 import { defineStore } from 'pinia'
+import { ref } from 'vue'
 
 interface User {
-  id: string
-  name: string
+  id: number
   email: string
-  role: 'user' | 'admin'
+  name: string
+  isAdmin: boolean
 }
 
-interface AuthState {
-  user: User | null
-  token: string | null
-  isAuthenticated: boolean
-}
+export const useAuthStore = defineStore('auth', () => {
+  const user = ref<User | null>(null)
+  const isAuthenticated = ref(false)
+  const token = ref<string | null>(null)
 
-export const useAuthStore = defineStore('auth', {
-  state: (): AuthState => ({
-    user: null,
-    token: null,
-    isAuthenticated: false
-  }),
-
-  getters: {
-    isAdmin: (state) => state.user?.role === 'admin',
-  },
-
-  actions: {
-    setUser(user: User | null) {
-      this.user = user
-      this.isAuthenticated = !!user
-    },
-
-    setToken(token: string | null) {
-      this.token = token
-    },
-
-    async login(email: string, password: string, isAdmin: boolean = false) {
-      try {
-        // Simulate API call
-        // In real app, make API request here
-        const user = {
-          id: '1',
-          name: 'John Doe',
-          email,
-          role: isAdmin ? 'admin' : 'user'
-        }
-        const token = 'fake-jwt-token'
-
-        this.setUser(user)
-        this.setToken(token)
-
-        // Store in localStorage
-        localStorage.setItem('user', JSON.stringify(user))
-        localStorage.setItem('token', token)
-
-        return true
-      } catch (error) {
-        console.error('Login failed:', error)
-        return false
-      }
-    },
-
-    async logout() {
-      // Clear store
-      this.setUser(null)
-      this.setToken(null)
-
-      // Clear localStorage
-      localStorage.removeItem('user')
-      localStorage.removeItem('token')
-    },
-
-    initializeFromStorage() {
-      const user = localStorage.getItem('user')
-      const token = localStorage.getItem('token')
-
-      if (user && token) {
-        this.setUser(JSON.parse(user))
-        this.setToken(token)
-      }
+  // Initialize auth state from storage
+  const initializeFromStorage = async () => {
+    const storedToken = localStorage.getItem('token')
+    const storedUser = localStorage.getItem('user')
+    
+    if (storedToken && storedUser) {
+      token.value = storedToken
+      user.value = JSON.parse(storedUser)
+      isAuthenticated.value = true
     }
+  }
+
+  // Login function
+  const login = async (email: string, password: string, isAdmin = false) => {
+    try {
+      // Mock API call - replace with actual API call
+      await new Promise(resolve => setTimeout(resolve, 1000))
+      
+      // Mock successful login
+      const mockUser = {
+        id: 1,
+        email,
+        name: 'John Doe',
+        isAdmin
+      }
+      const mockToken = 'mock_jwt_token'
+
+      // Update state
+      user.value = mockUser
+      token.value = mockToken
+      isAuthenticated.value = true
+
+      // Save to localStorage
+      localStorage.setItem('token', mockToken)
+      localStorage.setItem('user', JSON.stringify(mockUser))
+
+      return true
+    } catch (error) {
+      console.error('Login failed:', error)
+      return false
+    }
+  }
+
+  // Logout function
+  const logout = () => {
+    user.value = null
+    token.value = null
+    isAuthenticated.value = false
+    localStorage.removeItem('token')
+    localStorage.removeItem('user')
+  }
+
+  // Forgot password function
+  const forgotPassword = async (email: string) => {
+    try {
+      // Mock API call - replace with actual API call
+      await new Promise(resolve => setTimeout(resolve, 1000))
+      return true
+    } catch (error) {
+      console.error('Password reset failed:', error)
+      return false
+    }
+  }
+
+  return {
+    user,
+    isAuthenticated,
+    token,
+    login,
+    logout,
+    forgotPassword,
+    initializeFromStorage
   }
 }) 

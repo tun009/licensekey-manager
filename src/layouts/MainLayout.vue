@@ -23,14 +23,6 @@
           <span :class="{ 'hidden': !isSidebarOpen }">Bảng điều khiển</span>
         </router-link>
         <router-link
-          to="/licenses"
-          class="flex items-center gap-2 px-3 py-2 rounded-md hover:bg-gray-100 text-gray-700"
-          :class="{ 'justify-center': !isSidebarOpen }"
-        >
-          <Key class="h-5 w-5" />
-          <span :class="{ 'hidden': !isSidebarOpen }">Giấy phép</span>
-        </router-link>
-        <router-link
           to="/products"
           class="flex items-center gap-2 px-3 py-2 rounded-md hover:bg-gray-100 text-gray-700"
           :class="[
@@ -40,6 +32,14 @@
         >
           <Package class="h-5 w-5" />
           <span :class="{ 'hidden': !isSidebarOpen }">Sản phẩm</span>
+        </router-link>
+        <router-link
+          to="/licenses"
+          class="flex items-center gap-2 px-3 py-2 rounded-md hover:bg-gray-100 text-gray-700"
+          :class="{ 'justify-center': !isSidebarOpen }"
+        >
+          <Key class="h-5 w-5" />
+          <span :class="{ 'hidden': !isSidebarOpen }">Licenses</span>
         </router-link>
         <router-link
           to="/users"
@@ -206,7 +206,7 @@ const $t = (key: string) => {
       home: 'Trang chủ',
       dashboard: 'Bảng điều khiển',
       products: 'Sản phẩm',
-      licenses: 'Giấy phép',
+      licenses: 'Licenses',
       users: 'Người dùng',
       orders: 'Đơn hàng',
       settings: 'Cài đặt',
